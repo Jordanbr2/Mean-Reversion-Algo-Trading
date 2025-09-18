@@ -1,0 +1,80 @@
+//@version=5
+strategy("Mean Reversion Strategyr", initial_capital = 10000, overlay=true, default_qty_type=strategy.cash)
+
+// Input parameters
+ema_length = input(50, title="EMA Length")
+atr_length = input(14, title="ATR Length")
+rsi_length = input(14, title="RSI Length")
+adx_length = input(14, title="ADX Length")
+adx_smoothing = input(14, title="ADX Smoothing")
+adx_threshold = input(25, title="ADX Threshold")  // Below this value, market is ranging
+risk_per_trade = input(1, title="Risk % Per Trade") / 100
+
+// Indicators
+ema = ta.ema(close, ema_length)
+atr = ta.atr(atr_length)
+[dmi_plus, dmi_minus, adx] = ta.dmi(adx_length, adx_smoothing)
+rsi = ta.rsi(close, rsi_length)
+
+// Entry Conditions
+long_entry = low < (ema - 1.5 * atr) and rsi < 35 and adx > adx_threshold
+short_entry = high > (ema + 1.5 * atr) and rsi > 65 and adx > adx_threshold
+
+//Get Position Size
+get_PS(entry) =>
+    risk = 0.01
+    sl_distance = atr
+    (risk * strategy.initial_capital) / sl_distance
+
+// Trading window: 07:00 - 16:00 UTC
+time_filter = hour >= 7 and hour < 16
+
+// Variables to track entry price and set breakeven stop loss
+var float long_entry_price = na
+var float short_entry_price = na
+var bool long_breakeven_set = false
+var bool short_breakeven_set = false
+
+// Execute trades and check for breakeven
+if long_entry and time_filter
+    strategy.entry("Long", strategy.long, qty=get_PS(0))
+    long_entry_price := close
+    long_breakeven_set := false
+
+if short_entry and time_filter
+    strategy.entry("Short", strategy.short, qty=get_PS(0))
+    short_entry_price := close
+    short_breakeven_set := false
+
+// Define TP and SL 
+long_tp = long_entry_price + 2 * atr
+long_sl = long_entry_price - 1 * atr
+short_tp = short_entry_price - 2 * atr
+short_sl = short_entry_price + 1 * atr
+
+// Calculate stop loss distance
+long_sl_distance = long_entry_price - long_sl
+short_sl_distance = short_sl - short_entry_price
+
+// Check if price has moved 0.5% of stop loss distance in my favor and adjust stop loss to breakeven
+if strategy.position_size > 0
+    strategy.exit("Long Exit", from_entry="Long", limit=long_tp, stop=long_sl)
+    if close >= long_entry_price + (long_sl_distance * 0.005) and not long_breakeven_set
+        strategy.exit("Long Exit", from_entry="Long", stop=long_entry_price)
+        long_breakeven_set := true
+
+if strategy.position_size < 0
+    strategy.exit("Short Exit", from_entry="Short", limit=short_tp, stop=short_sl)
+    if close <= short_entry_price - (short_sl_distance * 0.005) and not short_breakeven_set
+        strategy.exit("Short Exit", from_entry="Short", stop=short_entry_price)
+        short_breakeven_set := true
+
+// Plot indicators
+plot(ema, color=color.blue, title="EMA 50")
+plot(long_tp, color=color.green, title="Long TP", style=plot.style_circles)
+plot(long_sl, color=color.red, title="Long SL", style=plot.style_circles)
+plot(short_tp, color=color.green, title="Short TP", style=plot.style_circles)
+plot(short_sl, color=color.red, title="Short SL", style=plot.style_circles)
+plot(adx, color=color.orange, title="ADX")
+
+
