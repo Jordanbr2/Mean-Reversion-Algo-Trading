@@ -94,7 +94,7 @@ class MeanReversionStrategy:
         self.data['Short_Entry'] = (self.data[high_col] > (self.data['EMA'] + 1.5 * atr)) & (self.data['RSI'] < 50)
 
         # Calculate SL and TP based on the Close price and ATR
-        self.data['Long_SL'] = close - (atr * 1
+        self.data['Long_SL'] = close - (atr * 1)
         self.data['Long_TP'] = close + (atr * 2)
         self.data['Short_SL'] = close + (atr * 1)
         self.data['Short_TP'] = close - (atr * 2)
@@ -133,7 +133,7 @@ class MeanReversionStrategy:
     def run(self):
         return self.backtest()
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     try:
         #run strategy
         strategy = MeanReversionStrategy(
@@ -152,4 +152,3 @@ if _name_ == "_main_":
 
     except Exception as e:
         print(f"Error: {str(e)}")
-
