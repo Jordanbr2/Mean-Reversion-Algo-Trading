@@ -20,8 +20,7 @@ It has been backtested on major forex pairs to assess performance.
 - **MQL5:** Open `.mq5` files in MetaTrader 5 to backtest or run live trades  
 
 ## Results / Performance
-<img src="images/backtest.png" alt="Backtesting Results" width="600">
-
+![image alt](https://github.com/Jordanbr2/Mean-Reversion-Algo-Trading/blob/5c8c880e6eff6813f7175f072dbb0c9879b3f723/Backtesting.png)
 ## Links / References
 - Full Portfolio (Ideation, Development, Code, Optimization, Reflection):  
-[Portfolio Link](https://docs.google.com/document/d/1NklvukPeGrMNjmrSPWzegBdigwNDbJ0vd90vO3n9wXQ/edit?usp=sharing)
+[Portfolio Link](https://docs.google.com/document/d/1NklvukPeGrMNjmrSPWzegBdigwNDbJ0vd90vO3n9wXQ/)
