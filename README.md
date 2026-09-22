@@ -1,7 +1,7 @@
 # 📈 Mean Reversion Algo Trading Strategy
 
 ## Brief Description / Motivation
-This Mean-Reversion Strategy is designed to generate consistent returns by trading against short-term price overreactions caused by institutional activities.  
+This Mean-Reversion Strategy is designed using the assitance of AI tools to generate consistent returns by trading against short-term price overreactions caused by institutional activities.  
 The strategy executes during the **London–New York overlap session (7:00 AM – 12:00 PM EST)**, anticipating price retracements back to their historical mean.  
 It has been backtested on major forex pairs to assess performance.
 
